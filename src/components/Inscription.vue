@@ -50,6 +50,10 @@
                 <label for="isMember">Souhaitez-vous devenir membre de Huddle ?</label>
                 <input type="checkbox" id="isMember" v-model="form.isMember" />
             </div>
+            <div>
+                <label for="receiveTshirt">Souhaitez-vous recevoir votre t-shirt ?</label>
+                <input type="checkbox" id="receiveTshirt" v-model="form.receiveTshirt" />
+            </div>
             <button type="submit">Envoyer</button>
         </form>
     </div>
@@ -71,11 +75,13 @@ const form = reactive({
     country: "",
     isCoach: false,
     isMember: false,
+    receiveTshirt: false,
 });
 
 function submitForm() {
     console.log("Formulaire soumis :", form);
     // Ajoutez ici la logique pour traiter les données du formulaire
+    window.location.href = "/confirmation";
 }
 </script>
 

@@ -3,27 +3,26 @@
         <h1>Choisissez votre modèle de T-shirt</h1>
         <div class="models">
             <div class="model" @click="selectModel('model1')">
-                <img src="@/assets/model1.png" alt="Modèle 1" />
+                <img src="" alt="Modèle 1" />
                 <button>Modèle 1</button>
             </div>
             <div class="model" @click="selectModel('model2')">
-                <img src="@/assets/model2.png" alt="Modèle 2" />
+                <img src="" alt="Modèle 2" />
                 <button>Modèle 2</button>
             </div>
         </div>
     </div>
 </template>
 
-<script>
-export default {
-    name: "ModelChoice",
-    methods: {
-        selectModel(model) {
-            // Redirection vers la page de personnalisation avec le modèle sélectionné
-            this.$router.push({ name: 'Customization', query: { model } });
-        },
-    },
-};
+<script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+function selectModel(model) {
+    // Redirection vers la page de personnalisation avec le modèle sélectionné
+    router.push({ name: 'Customization', query: { model } });
+}
 </script>
 
 <style scoped>
