@@ -81,6 +81,16 @@ const cameraRef = ref(null)
 const rendererRef = ref(null)
 const canvasGroup = ref(null) // Pour regrouper tous les éléments de dessin
 
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const modelQuery = ref(route.query.model || 'model1')
+
+// Watch for changes in the route query
+watch(() => route.query.model, (newModel) => {
+  modelQuery.value = newModel || 'model1'
+})
+
 // Fonction pour définir l'outil actuel
 function setTool(tool) {
   currentTool.value = tool
@@ -321,13 +331,19 @@ function addTextToModel(position, text, color, size) {
   const textMesh = new THREE.Mesh(geometry, material)
   
   // Positionner le texte
-  const direction = new THREE.Vector3()
-direction.subVectors(textMesh.position, cameraRef.value.position).normalize()
-textMesh.position.add(direction.multiplyScalar(0.01)) // Petit décalage vers la caméra
-
+  // Position the text at the intersection point
   textMesh.position.copy(position)
-  textMesh.lookAt(cameraRef.value.position) // Orienter vers la caméra
-  
+
+  // Get normal vector at intersection point (direction perpendicular to surface)
+  const normal = new THREE.Vector3()
+  normal.subVectors(cameraRef.value.position, position).normalize()
+
+  // Add slight offset along normal to prevent z-fighting
+  textMesh.position.add(normal.multiplyScalar(0.05))
+
+  // Make text face the camera
+  textMesh.lookAt(cameraRef.value.position)
+    
   // Ajouter au groupe de canvas
   if (canvasGroup.value) {
     canvasGroup.value.add(textMesh)
@@ -341,7 +357,8 @@ textMesh.position.add(direction.multiplyScalar(0.01)) // Petit décalage vers la
 onMounted(() => {
   const scene = new THREE.Scene()
   sceneRef.value = scene
-  scene.background = new THREE.Color(0xeeeeee)
+  // Définir un fond transparent au lieu d'une couleur de fond
+  scene.background = null
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
   cameraRef.value = camera
@@ -350,11 +367,13 @@ onMounted(() => {
   const renderer = new THREE.WebGLRenderer({ 
     antialias: true,
     powerPreference: 'high-performance',
-    alpha: true // Permettre la transparence
+    alpha: true // Activer la transparence du renderer
   })
   rendererRef.value = renderer
   renderer.setSize(window.innerWidth, window.innerHeight)
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
+  // Activer la transparence dans le renderer
+  renderer.setClearColor(0x000000, 0)
   viewer.value.appendChild(renderer.domElement)
 
   // Gestion du redimensionnement de la fenêtre
@@ -368,9 +387,9 @@ onMounted(() => {
   window.addEventListener('resize', handleResize)
 
   // Éclairage
-  const light = new THREE.HemisphereLight(0xffffff, 0x444444)
+  const light = new THREE.HemisphereLight(0xFFFFFF, 0x82826E, 1)
   scene.add(light)
-  const dirLight = new THREE.DirectionalLight(0xffffff)
+  const dirLight = new THREE.DirectionalLight(0xFFFFFF)
   dirLight.position.set(0, 1, 1).normalize()
   scene.add(dirLight)
 
@@ -379,12 +398,7 @@ onMounted(() => {
   canvasGroup.value = group
   scene.add(group)
 
-  // Mur de fond
-  const wallGeometry = new THREE.PlaneGeometry(20, 20)
-  const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xdcdcdc })
-  const wall = new THREE.Mesh(wallGeometry, wallMaterial)
-  wall.position.z = -5
-  scene.add(wall)
+  // Supprimer le mur de fond pour avoir un arrière-plan transparent
 
   const loader = new GLTFLoader()
   let mixer
@@ -392,30 +406,55 @@ onMounted(() => {
   let animationStopped = false
   let interactionDone = false
 
-  loader.load('/models/ESports Jersey Mockup.glb', (gltf) => {
-    model = gltf.scene
-    modelRef.value = model
-    model.scale.set(1, 1, 1)
-    model.position.y = -0.8
-    scene.add(model)
+  if (modelQuery.value === '1') {
+    loader.load('/models/jersey1.glb', (gltf) => {
+      model = gltf.scene
+      modelRef.value = model
+      model.scale.set(1, 1, 1)
+      model.position.y = -0.6
+      scene.add(model)
 
-    // Optimiser le modèle pour les performances
-    model.traverse((object) => {
-      if (object.isMesh) {
-        object.castShadow = false
-        object.receiveShadow = false
+      model.traverse((object) => {
+        if (object.isMesh) {
+          object.castShadow = false
+          object.receiveShadow = false
+        }
+      })
+
+      if (gltf.animations.length > 0) {
+        mixer = new THREE.AnimationMixer(model)
+        const clip = THREE.AnimationClip.findByName(gltf.animations, 'Résumé')
+        if (clip) {
+          const action = mixer.clipAction(clip)
+          action.play()
+        }
       }
     })
+  } else if (modelQuery.value === '2') {
+    loader.load('/models/jersey2.glb', (gltf) => {
+      model = gltf.scene
+      modelRef.value = model
+      model.scale.set(1, 1, 1)
+      model.position.y = -0.6
+      scene.add(model)
 
-    if (gltf.animations.length > 0) {
-      mixer = new THREE.AnimationMixer(model)
-      const clip = THREE.AnimationClip.findByName(gltf.animations, 'Résumé')
-      if (clip) {
-        const action = mixer.clipAction(clip)
-        action.play()
+      model.traverse((object) => {
+        if (object.isMesh) {
+          object.castShadow = false
+          object.receiveShadow = false
+        }
+      })
+
+      if (gltf.animations.length > 0) {
+        mixer = new THREE.AnimationMixer(model)
+        const clip = THREE.AnimationClip.findByName(gltf.animations, 'Résumé')
+        if (clip) {
+          const action = mixer.clipAction(clip)
+          action.play()
+        }
       }
-    }
-  })
+    })
+  }
 
   const clock = new THREE.Clock()
 
@@ -601,11 +640,11 @@ onMounted(() => {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 500px;
-  height: 500px;
+  width: 18vw;
+  height: 30vh;
   background: none;
   border: 2px dashed #000;
-  transform: translate(-45%, -50%);
+  transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 1;
 }

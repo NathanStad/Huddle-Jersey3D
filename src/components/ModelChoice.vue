@@ -1,57 +1,101 @@
 <template>
     <div class="model-choice">
-        <h1>Choisissez votre modèle de T-shirt</h1>
-        <div class="models">
-            <div class="model" @click="selectModel('model1')">
-                <img src="" alt="Modèle 1" />
-                <button>Modèle 1</button>
-            </div>
-            <div class="model" @click="selectModel('model2')">
-                <img src="" alt="Modèle 2" />
-                <button>Modèle 2</button>
-            </div>
-        </div>
+      <h1>Choose your favorite jersey</h1>
+      <div class="models">
+        <label class="model" :class="{ selected: selectedModel === 1 }">
+          <input type="radio" name="model" value="1" v-model="selectedModel" hidden />
+          <img src="/img/jersey-color1.png" alt="Modèle 1" @click="selectModel(1)" />
+        </label>
+        <label class="model" :class="{ selected: selectedModel === 2 }">
+          <input type="radio" name="model" value="2" v-model="selectedModel" hidden />
+          <img src="/img/jersey-color2.png" alt="Modèle 2" @click="selectModel(2)" />
+        </label>
+      </div>
+  
+      <button @click="confirmSelection" class="confirm-button">LET’S GO</button>
     </div>
-</template>
-
-<script setup>
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-function selectModel(model) {
-    // Redirection vers la page de personnalisation avec le modèle sélectionné
-    router.push({ name: 'Customization', query: { model } });
-}
-</script>
-
-<style scoped>
-.model-choice {
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
+  
+  const router = useRouter()
+  const selectedModel = ref(null)
+  
+  function selectModel(model) {
+    selectedModel.value = model
+  }
+  
+  function confirmSelection() {
+    if (selectedModel.value !== null) {
+      router.push({ name: 'Customization', query: { model: selectedModel.value } })
+    } else {
+      alert('Veuillez choisir un modèle.')
+    }
+  }
+  </script>
+  
+  <style scoped>
+  .model-choice {
     text-align: center;
-    margin-top: 50px;
-}
+    font-family: sans-serif;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
 
-.models {
+  h1{
+    color: #6AA24A;
+    font-size: 5rem;
+    margin: 2%;
+    font-family: 'Berlin Sans FB', sans-serif;
+
+}
+  
+  .models {
     display: flex;
     justify-content: center;
-    gap: 20px;
-}
-
-.model {
-    text-align: center;
+    gap: 40px;
+    margin: 40px 0;
+  }
+  
+  .model {
+    border: 2px solid transparent;
+    padding: 10px;
+    border-radius: 10px;
+    transition: border 0.3s ease;
     cursor: pointer;
-}
-
-.model img {
-    width: 150px;
+  }
+  
+  .model img {
+    width: 350px;
     height: auto;
-    margin-bottom: 10px;
-}
-
-.model button {
-    margin-top: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
+  }
+  
+  .model.selected {
+    border: 3px solid #6AA24A;
+    box-shadow: 0 0 10px rgba(123, 180, 100, 0.5);
+  }
+  
+  .confirm-button {
+    background-color: #6AA24A;
+    color: white;
+    border: none;
+    padding: 2% 0.5%;
+    font-size: 1.5rem;
     cursor: pointer;
-}
-</style>
+    border-radius: 5px;
+    font-family: 'Berlin Sans FB', sans-serif;
+    width: 40%;
+    border-radius: 100px;
+  }
+  
+  .confirm-button:hover {
+    background-color: #6AA24A;
+  }
+  </style>
+  
