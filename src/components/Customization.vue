@@ -42,7 +42,9 @@
        :style="textPreviewStyle" 
        class="text-preview">{{ textInput }}</div>
   
-  <a v-if="showPaintUI" href="/inscrpition" class="button">Terminer</a>
+  <a v-if="showPaintUI" href="/inscription" class="button">Terminer</a>
+  <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
+
 </template>
 
 <script setup>

@@ -14,6 +14,7 @@
   
       <button @click="confirmSelection" class="confirm-button">LET’S GO</button>
     </div>
+    <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
   </template>
   
   <script setup>

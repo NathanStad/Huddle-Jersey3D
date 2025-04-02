@@ -34,16 +34,18 @@
           <img src="/img/jersey-color1.png" alt="Shirt preview" />
         </div>
       </div>
-      <div>
-        <button type="submit" class="next-button">NEXT</button>
-        <div class="back-link">Retour</div>
+      <div class="form-submit">
+        <button type="submit" class="next-button" @click="next">NEXT</button>
+        <div class="back-link" @click="back">Retour</div>
       </div>
     </div>
+    <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
   </template>
   
   <script setup>
   import { reactive } from "vue";
-  
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
   const form = reactive({
     firstName: "",
     lastName: "",
@@ -51,10 +53,16 @@
     phoneNumber: "",
     countryCode: "+41",
   });
-  
+  function next() {
+    router.push("/receive");
+  }
+  function back() {
+    window.history.back();
+  }
+
   function submitForm() {
     console.log("Form data:", form);
-    window.location.href = "/confirmation";
+    window.location.href = "/receive";
   }
   </script>
   
@@ -80,6 +88,7 @@
     justify-content: space-between;
     gap: 60px;
     height: 70vh;
+    width: 80vw;
   }
   
   .text-form {
@@ -88,13 +97,14 @@
   
   .text-form h1 {
     color: #6AA24A;
-    font-size: 2.2rem;
+    font-size: 5rem;
     font-weight: bold;
   }
   
   .text-form p {
     color: #6AA24A;
     margin-bottom: 30px;
+    font-size: 1.8rem;
     font-weight: 600;
   }
   
@@ -117,6 +127,7 @@
     border-radius: 8px;
     background: transparent;
     font-size: 1rem;
+    color: #6AA24A;
   }
   
   .phone-input .phone-wrapper {
@@ -127,9 +138,12 @@
   .phone-wrapper select {
     width: 80px;
   }
-  
-  .next-button {
+  #phoneNumber{
     width: 100%;
+  }
+  .next-button {
+    width: 40%;
+    height: 40%;
     padding: 14px;
     background-color: #6AA24A;
     color: white;
@@ -153,7 +167,14 @@
     text-decoration: underline;
     font-size: 0.9rem;
   }
-  
+  .form-submit{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 20%;
+  }
   .shirt-preview {
     flex: 1;
     text-align: center;
@@ -161,7 +182,6 @@
   
   .shirt-preview img {
     width: 100%;
-    max-width: 300px;
   }
   </style>
   

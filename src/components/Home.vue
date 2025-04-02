@@ -8,6 +8,7 @@
         <div id="jersey-model-container" class="model-container"></div>
         <button @click="goToNextPage">LET'S GO</button>
     </div>
+    <img src="/public/img/Logo_SansFond.png" class="logo" alt="Logo Huddle" />
 </template>
 
 <script setup>

@@ -4,8 +4,25 @@
   font-weight: normal;
   font-style: normal;
 }
+*{
+  box-sizing: border-box;
+}
 body{
   margin: 0;
   font-family: 'Berlin Sans FB', sans-serif;
   background-color: #FFFCD7;
+  overflow: hidden visible ;
+}
+button{
+  font-family: 'Berlin Sans FB', sans-serif;
+
+}
+h1{
+  font-family: 'Berlin Sans FB', sans-serif;
+}
+.logo{
+  position: absolute;
+  bottom: 8%;
+  right: 5%;
+  width: 10vw;
 }
