@@ -1,71 +1,122 @@
 <template>
-    <div class="form-page">
-
-      <div class="form-container">
-        <div class="text-form">
-          <h1>Almost there !</h1>
-          <p>Fill in your details to continue</p>
-          <form @submit.prevent="submitForm">
-            <div class="input-group">
-              <label for="firstName">First name</label>
-              <input type="text" id="firstName" v-model="form.firstName" required />
+  <div class="form-page">
+    <div class="form-container">
+      <div class="text-form">
+        <h1>Almost there !</h1>
+        <p>Fill in your details to continue</p>
+        <form @submit.prevent="handleSubmit">
+          <div class="input-group">
+            <label for="firstName">First name</label>
+            <input type="text" id="firstName" v-model="form.firstName" required />
+            <span v-if="errors.firstName">{{ errors.firstName }}</span>
+          </div>
+          <div class="input-group">
+            <label for="lastName">Last name</label>
+            <input type="text" id="lastName" v-model="form.lastName" required />
+            <span v-if="errors.lastName">{{ errors.lastName }}</span>
+          </div>
+          <div class="input-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" v-model="form.email" required />
+            <span v-if="errors.email">{{ errors.email }}</span>
+          </div>
+          <div class="input-group phone-input">
+            <label for="phoneNumber">Phone number</label>
+            <div class="phone-wrapper">
+              <select v-model="form.countryCode">
+                <option value="+41">+41</option>
+                <option value="+33">+33</option>
+              </select>
+              <input type="tel" id="phoneNumber" v-model="form.phoneNumber" required />
             </div>
-            <div class="input-group">
-              <label for="lastName">Last name</label>
-              <input type="text" id="lastName" v-model="form.lastName" required />
-            </div>
-            <div class="input-group">
-              <label for="email">Email adress</label>
-              <input type="email" id="email" v-model="form.email" required />
-            </div>
-            <div class="input-group phone-input">
-              <label for="phoneNumber">Phone number</label>
-              <div class="phone-wrapper">
-                <select v-model="form.countryCode">
-                  <option value="+41">+41</option>
-                  <option value="+33">+33</option>
-                </select>
-                <input type="tel" id="phoneNumber" v-model="form.phoneNumber" required />
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="shirt-preview">
-          <img src="/img/jersey-color1.png" alt="Shirt preview" />
-        </div>
+            <span v-if="errors.phoneNumber">{{ errors.phoneNumber }}</span>
+          </div>
+        </form>
       </div>
-      <div class="form-submit">
-        <button type="submit" class="next-button" @click="next">NEXT</button>
-        <div class="back-link" @click="back">Retour</div>
+      <div class="shirt-preview">
+        <img src="/img/jersey-color1.png" alt="Shirt preview" />
       </div>
     </div>
+    <div class="form-submit">
+      <button 
+        type="submit" 
+        class="next-button" 
+        @click="handleSubmit" 
+        :disabled="!isFormValid"
+      >
+        NEXT
+      </button>
+      <div class="back-link" @click="back">Retour</div>
+    </div>
     <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
-  </template>
-  
-  <script setup>
-  import { reactive } from "vue";
-  import { useRouter } from 'vue-router';
-  const router = useRouter();
-  const form = reactive({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    countryCode: "+41",
-  });
-  function next() {
+  </div>
+</template>
+
+<script setup>
+import { reactive, computed } from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+
+if (!(localStorage.getItem('lastExportedFile'))) {
+  window.history.back();
+}
+
+const form = reactive({
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  countryCode: "+41"
+});
+
+const errors = reactive({
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: ""
+});
+
+const isValidName = (value) => /^[A-Za-zÀ-ÖØ-öø-ÿ\-]{2,30}$/.test(value);
+const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+const isValidPhone = (value) => /^[0-9]{7,15}$/.test(value);
+
+const validate = () => {
+  let isValid = true;
+  errors.firstName = isValidName(form.firstName) ? '' : 'Invalid first name';
+  errors.lastName = isValidName(form.lastName) ? '' : 'Invalid last name';
+  errors.email = isValidEmail(form.email) ? '' : 'Invalid email';
+  errors.phoneNumber = isValidPhone(form.phoneNumber) ? '' : 'Invalid phone number';
+  return !errors.firstName && !errors.lastName && !errors.email && !errors.phoneNumber;
+};
+
+const isFormValid = computed(() => {
+  return (
+    form.firstName.trim() !== "" &&
+    form.lastName.trim() !== "" &&
+    form.email.trim() !== "" &&
+    form.phoneNumber.trim() !== "" &&
+    form.countryCode.trim() !== ""
+  );
+});
+
+function handleSubmit() {
+  if (validate()) {
+    const data = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      phone: form.countryCode + form.phoneNumber
+    };
+    localStorage.setItem('inscriptionForm', JSON.stringify(data));
     router.push("/receive");
   }
-  function back() {
-    window.history.back();
-  }
+}
 
-  function submitForm() {
-    console.log("Form data:", form);
-    window.location.href = "/receive";
-  }
-  </script>
-  
+function back() {
+  window.history.back();
+}
+</script>
   <style scoped>
   *{
     font-family: 'Berlin Sans FB', sans-serif;
@@ -154,6 +205,9 @@
     margin-top: 20px;
     cursor: pointer;
   }
+  .next-button:disabled {
+    opacity: 0.5;
+  }
   
   .next-button:hover {
     background-color: #6AA24A;
@@ -184,4 +238,3 @@
     width: 100%;
   }
   </style>
-  

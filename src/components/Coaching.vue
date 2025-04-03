@@ -59,11 +59,11 @@ const selectedOption = ref("yes");
 
 function submitChoice() {
   if (selectedOption.value === "yes") {
-    router.push("/confirmation?conf=1");
-    alert("You are registered for the coaching info-session!");
+    localStorage.setItem("coachingSession", "true");
+    router.push("/confirmation");
   } else {
-    router.push("/confirmation?conf=2");
-    alert("No worries! Maybe next time.");
+    localStorage.setItem("coachingSession", "false");
+    router.push("/confirmation");
   }
 }
 </script>

@@ -1,77 +1,121 @@
 <template>
-    <div class="shipping-container">
-      <h1 class="title">How would you like to receive your jersey?</h1>
-  
-      <div class="content">
-        <!-- Flyer -->
-        <div class="flyer">
-            
+  <div class="shipping-container">
+    <h1 class="title">How would you like to receive your jersey?</h1>
+
+    <div class="content">
+      <!-- Flyer -->
+      <div class="flyer"></div>
+
+      <!-- Formulaire -->
+      <form class="form" @submit.prevent="handleSubmit">
+        <label>
+          Street address
+          <input type="text" v-model="form.street" required />
+          <span v-if="errors.street">{{ errors.street }}</span>
+        </label>
+
+        <div class="row">
+          <label>
+            Postal code
+            <input type="text" v-model="form.postal" required />
+            <span v-if="errors.postal">{{ errors.postal }}</span>
+          </label>
+          <label>
+            City
+            <input type="text" v-model="form.city" required />
+            <span v-if="errors.city">{{ errors.city }}</span>
+          </label>
         </div>
-  
-        <!-- Formulaire -->
-        <form class="form" @submit.prevent="submitForm">
-          <label>
-            Street adress
-            <input type="text" v-model="form.street" required />
-          </label>
-  
-          <div class="row">
-            <label>
-              Postal code
-              <input type="text" v-model="form.postal" required />
-            </label>
-            <label>
-              City
-              <input type="text" v-model="form.city" required />
-            </label>
-          </div>
-  
-          <label>
-            Country
-            <select v-model="form.country" required>
-              <option>Switzerland</option>
-              <option>France</option>
-              <option>Germany</option>
-              <option>Italy</option>
-            </select>
-          </label>
-        </form>
-      </div>
-  
-      <!-- Boutons -->
-      <div class="buttons">
-        <button class="btn" @click="takeFlyer">I'll just take the flyer</button>
-        <button class="btn" @click="submitForm">Ship my jersey home!</button>
-      </div>
-  
-      <!-- Logo -->
-      <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
+
+        <label>
+          Country
+          <select v-model="form.country" required>
+            <option>Switzerland</option>
+            <option>France</option>
+            <option>Germany</option>
+            <option>Italy</option>
+          </select>
+        </label>
+      </form>
     </div>
-  </template>
-  
-  <script setup>
-  import { reactive } from 'vue'
-  import { useRouter } from 'vue-router';
+
+    <!-- Boutons -->
+    <div class="buttons">
+      <button class="btn" @click="takeFlyer">I'll just take the flyer</button>
+      <button 
+        class="btn" 
+        @click="handleSubmit" 
+        :disabled="!isFormValid"
+      >
+        Ship my jersey home!
+      </button>
+    </div>
+
+    <!-- Logo -->
+    <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
+  </div>
+</template>
+
+<script setup>
+import { reactive, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+if (!localStorage.getItem('inscriptionForm')) {
+  window.history.back();
+}
+
 const router = useRouter();
-  const form = reactive({
-    street: '',
-    postal: '',
-    city: '',
-    country: 'Switzerland',
-  })
-  
-  function submitForm() {
-    alert(`Shipping to: ${form.street}, ${form.postal} ${form.city}, ${form.country}`)
-        router.push("/coaching");
+const form = reactive({
+  street: '',
+  postal: '',
+  city: '',
+  country: 'Switzerland',
+});
 
-  }
-  
-  function takeFlyer() {
-    alert('Flyer selected. No shipping needed.')
-        router.push("/coaching");
+const errors = reactive({
+  street: '',
+  postal: '',
+  city: ''
+});
 
+const isValidStreet = (value) => value.trim().length >= 3;
+const isValidPostal = (value) => /^[0-9]{3,10}$/.test(value);
+const isValidCity = (value) => /^[A-Za-zÀ-ÖØ-öø-ÿ\-\s]{2,30}$/.test(value);
+
+const validate = () => {
+  errors.street = isValidStreet(form.street) ? '' : 'Invalid street address';
+  errors.postal = isValidPostal(form.postal) ? '' : 'Invalid postal code';
+  errors.city = isValidCity(form.city) ? '' : 'Invalid city';
+
+  return !errors.street && !errors.postal && !errors.city;
+};
+
+const isFormValid = computed(() => {
+  return (
+    form.street.trim() !== '' &&
+    form.postal.toString().trim() !== '' &&
+    form.city.trim() !== '' &&
+    form.country.trim() !== ''
+  );
+});
+
+function handleSubmit() {
+  if (validate()) {
+    const shippingData = {
+      street: form.street,
+      postal: form.postal,
+      city: form.city,
+      country: form.country
+    };
+    localStorage.setItem('shippingForm', JSON.stringify(shippingData));
+    router.push("/coaching");
   }
-  </script>
+}
+
+function takeFlyer() {
+  router.push("/coaching");
+}
+</script>
   
   <style scoped>
     *{
@@ -79,13 +123,14 @@ const router = useRouter();
 
   }
   .shipping-container {
-    background-color: #fffbe9;
+    background-color: #fffbdc;
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-around;
+    padding-bottom: 50px;
   }
   
   .title {
@@ -175,13 +220,10 @@ const router = useRouter();
     color: #FFFBE9;
     font-family: 'Berlin Sans FB', sans-serif;
   }
-  
-  .btn.primary {
-  }
-  
-  .btn.secondary {
-    background-color: #cbe3b4;
-    color: #365e1f;
+
+  .btn:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
   }
   
   .logo {
@@ -190,5 +232,9 @@ const router = useRouter();
     color: #6AA24A;
     font-size: 20px;
   }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   </style>
-  

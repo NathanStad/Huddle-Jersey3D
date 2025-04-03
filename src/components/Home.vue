@@ -142,15 +142,15 @@ p {
 
 button {
     background-color: #F9D5E7;
-    color: white;
+    color: #6AA24A;
     border: none;
-    padding: 3% 1%;
+    padding: 2% 0.5%;
     font-size: 1.5rem;
     cursor: pointer;
     border-radius: 5px;
     font-family: 'Berlin Sans FB', sans-serif;
-    width: 50%;
-    color: #6AA24A;
+    width: 40%;
+    border-radius: 100px;
 }
 
 button:hover {

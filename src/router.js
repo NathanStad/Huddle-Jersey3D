@@ -6,6 +6,7 @@ import Confirmation from './components/Confirmation.vue'
 import ModelChoice from './components/ModelChoice.vue'
 import Receive from './components/Receive.vue'
 import Coaching  from './components/Coaching.vue'
+import Admin  from './components/Admin.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -15,6 +16,7 @@ const routes = [
   { path: '/receive', name: 'Receive', component: Receive },
   { path: '/coaching', name: 'Coaching', component: Coaching },
   { path: '/model-choice', name: 'ModelChoice', component: ModelChoice },
+  { path: '/admin', name: 'Admin', component: Admin },
 ]
 
 const router = createRouter({

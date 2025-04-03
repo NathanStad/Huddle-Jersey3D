@@ -1,21 +1,28 @@
 <template>
-    <div class="model-choice">
-      <h1>Choose your favorite jersey</h1>
-      <div class="models">
-        <label class="model" :class="{ selected: selectedModel === 1 }">
-          <input type="radio" name="model" value="1" v-model="selectedModel" hidden />
-          <img src="/img/jersey-color1.png" alt="Modèle 1" @click="selectModel(1)" />
-        </label>
-        <label class="model" :class="{ selected: selectedModel === 2 }">
-          <input type="radio" name="model" value="2" v-model="selectedModel" hidden />
-          <img src="/img/jersey-color2.png" alt="Modèle 2" @click="selectModel(2)" />
-        </label>
-      </div>
-  
-      <button @click="confirmSelection" class="confirm-button">LET’S GO</button>
+  <div class="model-choice">
+    <h1>Choose your favorite jersey</h1>
+    <div class="models">
+      <label class="model" :class="{ selected: selectedModel === 1 }">
+        <input type="radio" name="model" value="1" v-model="selectedModel" hidden />
+        <img src="/img/jersey-color1.png" alt="Modèle 1" @click="selectModel(1)" />
+      </label>
+      <label class="model" :class="{ selected: selectedModel === 2 }">
+        <input type="radio" name="model" value="2" v-model="selectedModel" hidden />
+        <img src="/img/jersey-color2.png" alt="Modèle 2" @click="selectModel(2)" />
+      </label>
     </div>
-    <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
-  </template>
+
+    <button 
+      @click="confirmSelection" 
+      class="confirm-button" 
+      :disabled="selectedModel === null"
+    >
+      LET’S GO
+    </button>
+    <a class="back" href="/">Retour</a>
+  </div>
+  <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
+</template>
   
   <script setup>
   import { ref } from 'vue'
@@ -84,7 +91,7 @@
   
   .confirm-button {
     background-color: #6AA24A;
-    color: white;
+    color: #FFFCDE;
     border: none;
     padding: 2% 0.5%;
     font-size: 1.5rem;
@@ -98,5 +105,14 @@
   .confirm-button:hover {
     background-color: #6AA24A;
   }
+  .back{
+    color: #6AA24A;
+    text-decoration: none;
+  }
+  .confirm-button:disabled {
+  background-color: #6AA24A;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
   </style>
   

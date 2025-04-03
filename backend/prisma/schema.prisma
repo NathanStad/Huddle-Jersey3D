@@ -1,0 +1,37 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Jersey {
+  id             Int      @id @default(autoincrement())
+  color          String
+  drawingFile    String
+  createdAt      DateTime @default(now())
+
+  client         Client?  // Relation 1:1 inversée, optionnelle
+}
+
+model Client {
+  id             Int      @id @default(autoincrement())
+  firstName      String
+  lastName       String
+  email          String   @unique
+  phoneNumber    String
+
+  // Champs optionnels
+  street         String? 
+  postalCode     String?
+  city           String?
+  country        String?
+  supportCoach   Boolean  @default(false)
+
+  jerseyId       Int?     @unique
+  jersey         Jersey?  @relation(fields: [jerseyId], references: [id])
+}
+
