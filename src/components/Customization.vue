@@ -7,62 +7,102 @@
   ></div>
   <div v-if="showPaintUI" class="paint-ui">
     <div class="tool-section">
-      <button
-        @click="setTool('brush')"
-        :class="{ active: currentTool === 'brush' }"
-        class="tool-button"
-      >
-        <span class="tool-icon">🖌️</span> Brush
-      </button>
-      <button
-        @click="setTool('eraser')"
-        :class="{ active: currentTool === 'eraser' }"
-        class="tool-button"
-      >
-        <span class="tool-icon">🧽</span> Eraser
-      </button>
-      <button
-        @click="setTool('text')"
-        :class="{ active: currentTool === 'text' }"
-        class="tool-button"
-      >
-        <span class="tool-icon">T</span> Text
-      </button>
+      <h2>Select a tool</h2>
+      <div>
+
+        <button
+          @click="setTool('brush')"
+          :class="{ active: currentTool === 'brush' }"
+          class="tool-button"
+        >
+          <span class="tool-icon">
+            <svg
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M8.29289 3.70711L1 11V15H5L12.2929 7.70711L8.29289 3.70711Z"
+                  fill="#000000"
+                ></path>
+                <path
+                  d="M9.70711 2.29289L13.7071 6.29289L15.1716 4.82843C15.702 4.29799 16 3.57857 16 2.82843C16 1.26633 14.7337 0 13.1716 0C12.4214 0 11.702 0.297995 11.1716 0.828428L9.70711 2.29289Z"
+                  fill="#000000"
+                ></path>
+              </g>
+            </svg>
+          </span>
+          Brush
+        </button>
+        <button
+          @click="setTool('eraser')"
+          :class="{ active: currentTool === 'eraser' }"
+          class="tool-button"
+        >
+          <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.0302 22H13.9902C13.5702 22 13.2402 21.66 13.2402 21.25C13.2402 20.84 13.5802 20.5 13.9902 20.5H21.0302C21.4502 20.5 21.7802 20.84 21.7802 21.25C21.7802 21.66 21.4502 22 21.0302 22Z" fill="#292D32"></path> <path d="M13.64 16.6894C14.03 17.0794 14.03 17.7094 13.64 18.1094L10.66 21.0894C9.55 22.1994 7.77 22.2594 6.59 21.2694C6.52 21.2094 6.46 21.1494 6.4 21.0894L5.53 20.2194L3.74 18.4294L2.88 17.5694C2.81 17.4994 2.75 17.4294 2.69 17.3594C1.71 16.1794 1.78 14.4194 2.88 13.3194L5.86 10.3394C6.25 9.94938 6.88 9.94938 7.27 10.3394L13.64 16.6894Z" fill="#292D32"></path> <path d="M21.1194 10.6414L16.1194 15.6414C15.7294 16.0314 15.0994 16.0314 14.7094 15.6414L8.33937 9.29141C7.94938 8.90141 7.94938 8.27141 8.33937 7.87141L13.3394 2.88141C14.5094 1.71141 16.4294 1.71141 17.5994 2.88141L21.1194 6.39141C22.2894 7.56141 22.2894 9.47141 21.1194 10.6414Z" fill="#292D32"></path> </g></svg></span> Eraser
+        </button>
+        <button
+          @click="setTool('text')"
+          :class="{ active: currentTool === 'text' }"
+          class="tool-button"
+        >
+          <span class="tool-icon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H1V15H15V1ZM3 3V7H5V5H7V11H5V13H11V11H9V5H11V7H13V3H3Z" fill="#000000"></path> </g></svg></span> Text
+        </button>
+      </div>
     </div>
 
     <div
       class="brush-controls"
-      v-if="currentTool === 'brush' || currentTool === 'eraser'"
+      v-if="currentTool === 'brush' || currentTool === 'text'"
     >
       <label
         >Size: <input type="range" min="1" max="50" v-model.number="brushSize"
       /></label>
-      <label v-if="currentTool === 'brush'"
-        >Color:
-        <input type="color" v-model="brushColor" class="color-picker" />
-      </label>
-    </div>
-
-    <div class="text-controls" v-if="currentTool === 'text'">
       <input
         type="text"
         v-model="textInput"
         placeholder="Enter text"
         class="text-input"
+        v-if="currentTool === 'text'"
       />
-      <label
-        >Font Size:
-        <input type="range" min="10" max="60" v-model.number="textSize"
-      /></label>
-      <label
-        >Color:
-        <input type="color" v-model="textColor" class="color-picker" />
-      </label>
     </div>
+    
+    <label v-if="currentTool === 'brush' || currentTool === 'text'" class="color-section">
+      <h2>Select a color</h2>
+      <div class="color-options">
+        <label>
+          <input type="radio" v-model="brushColor" value="#6AA24A" class="color-input" checked />
+          <span style="background-color: #6AA24A;" class="color-swatch"></span>
+        </label>
+        <label>
+          <input type="radio" v-model="brushColor" value="#F6EE80" class="color-input" />
+          <span style="background-color: #F6EE80;" class="color-swatch"></span>
+        </label>
+        <label>
+          <input type="radio" v-model="brushColor" value="#F9D5E7" class="color-input" />
+          <span style="background-color: #F9D5E7;" class="color-swatch"></span>
+        </label>
+        <label>
+          <input type="radio" v-model="brushColor" value="#000000" class="color-input" />
+          <span style="background-color: #000000;" class="color-swatch"></span>
+        </label>
+        <label>
+          <input type="radio" v-model="brushColor" value="#FFFFFF" class="color-input" />
+          <span style="background-color: #FFFFFF;" class="color-swatch"></span>
+        </label>
+      </div>
+    </label>
 
     <div class="action-buttons">
       <button @click="clearPaint" class="action-button clear-button">
-        Clear All
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 10L3.29289 10.7071L2.58579 10L3.29289 9.29289L4 10ZM21 18C21 18.5523 20.5523 19 20 19C19.4477 19 19 18.5523 19 18L21 18ZM8.29289 15.7071L3.29289 10.7071L4.70711 9.29289L9.70711 14.2929L8.29289 15.7071ZM3.29289 9.29289L8.29289 4.29289L9.70711 5.70711L4.70711 10.7071L3.29289 9.29289ZM4 9L14 9L14 11L4 11L4 9ZM21 16L21 18L19 18L19 16L21 16ZM14 9C17.866 9 21 12.134 21 16L19 16C19 13.2386 16.7614 11 14 11L14 9Z" fill="#33363F"></path> </g></svg> Clear All
       </button>
     </div>
   </div>
@@ -82,9 +122,9 @@
   </div>
 
   <button v-if="showPaintUI" @click="saveDrawing" class="button">
-    Terminer
+    CONFIRM MY JERSEY
   </button>
-  <a href="" class="back">Retour</a>
+  <a href="/model-choice" class="back">Back</a>
   <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
 </template>
 
@@ -99,10 +139,10 @@ const router = useRouter();
 const viewer = ref(null);
 const showPaintUI = ref(false);
 const brushSize = ref(10);
-const brushColor = ref("#000000");
+const brushColor = ref("#6AA24A");
 const textInput = ref("");
-const textSize = ref(24);
-const textColor = ref("#000000");
+const textSize = ref(brushSize.value + 10);
+const textColor = ref(brushColor.value);
 const currentTool = ref("brush");
 const showTextPreview = ref(false);
 const textPreviewX = ref(0);
@@ -144,7 +184,7 @@ async function saveDrawing() {
   let baseName = "mon-dessin";
   let ext = ".png";
   let i = 0;
-  let filename = Date.now()+'-'+`${baseName}${ext}`;
+  let filename = Date.now() + "-" + `${baseName}${ext}`;
   const exportPath = "used_filenames/";
 
   // while (localStorage.getItem(exportPath + filename)) {
@@ -155,13 +195,13 @@ async function saveDrawing() {
 
   try {
     const originalCanvas = renderer.domElement;
-    
+
     const tempCanvas = document.createElement("canvas");
     const tempContext = tempCanvas.getContext("2d");
-    
+
     tempCanvas.width = originalCanvas.width;
     tempCanvas.height = originalCanvas.height;
-    
+
     // ❌ Ne pas dessiner de fond → fond transparent par défaut
 
     tempContext.drawImage(originalCanvas, 0, 0);
@@ -175,11 +215,9 @@ async function saveDrawing() {
       const formData = new FormData();
       formData.append("file", blob, filename);
       if (modelQuery.value === "1") {
-        
         formData.append("color", "Maillot Rose"); // à adapter selon ton interface
       } else {
         formData.append("color", "Maillot Vert"); // à adapter selon ton interface
-        
       }
 
       try {
@@ -192,7 +230,7 @@ async function saveDrawing() {
 
         if (response.ok && data.id) {
           console.log("Image enregistrée avec succès :", data);
-          localStorage.setItem("lastExportedFile",  filename);
+          localStorage.setItem("lastExportedFile", filename);
           router.push({ path: "/inscription", query: { jerseyId: data.id } });
         } else {
           console.error("Erreur lors de l'enregistrement :", data.error);
@@ -207,9 +245,6 @@ async function saveDrawing() {
     console.error("Erreur lors de l'exportation :", error);
   }
 }
-
-
-
 
 // Watch for changes in the route query
 watch(
@@ -271,8 +306,8 @@ const brushCursorStyle = computed(() => ({
 const textPreviewStyle = computed(() => ({
   left: textPreviewX.value + "px",
   top: textPreviewY.value + "px",
-  fontSize: textSize.value + "px",
-  color: textColor.value,
+  fontSize: brushSize.value + "px",
+  color: brushColor.value,
 }));
 
 // Fonction pour vérifier si une couleur est foncée
@@ -740,7 +775,7 @@ onMounted(() => {
       const point = getIntersectionPoint(event);
       if (!point) return;
 
-      addTextToModel(point, textInput.value, textColor.value, textSize.value);
+      addTextToModel(point, textInput.value, brushColor.value, brushSize.value);
     }
 
     const handlePointerDown = (e) => {
@@ -804,54 +839,68 @@ onMounted(() => {
   pointer-events: none;
   z-index: 1;
 }
-.paint-ui {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-  font-family: sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+
+h2{
+  color: #6AA24A;
+  font-size: 4rem;
+  margin: 2%;
+  font-family: 'Berlin Sans FB', sans-serif;
 }
+
 .tool-section {
   display: flex;
+  flex-direction: column;
   gap: 5px;
   margin-bottom: 10px;
+  position: absolute;
+  top: 30%;
+  right: 5%;
+  width: 25%;
+}
+.tool-section div{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: space-between;
 }
 .tool-button {
   padding: 8px 12px;
-  border: 1px solid #ccc;
-  background: #f0f0f0;
+  background: transparent;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 5px;
+  width: 25% ;
+  font-size: 1.5rem;
 }
-.tool-button.active {
-  background: #007bff;
-  color: white;
-  border-color: #0069d9;
+.tool-button.active svg path {
+  fill: #6AA24A;
+}
+.tool-button.active  {
+  color: #6AA24A;
 }
 .tool-icon {
   font-size: 16px;
 }
-.brush-controls,
-.text-controls {
+.brush-controls{
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 25%;
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  font-family: "montserrat", sans-serif;
 }
 .text-input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px 15px ;
+  border: 2px solid #6AA24A;
+  background: transparent;
+  border-radius: 30px;
   width: 100%;
+  margin-top: 20px;
 }
 .color-picker {
   margin-left: 8px;
@@ -869,10 +918,21 @@ onMounted(() => {
   cursor: pointer;
 }
 .clear-button {
-  background: #ffeeee;
+  background: #6AA24A;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  color: #FFFCDE;
+  fill: #FFFCDE;
+  font-size: 1.5rem;
+  gap: 10px;
+  border-radius: 100px;
+  position: absolute;
+  top: 70%;
+  left: 12.5%;
 }
-.clear-button:hover {
-  background: #ffe0e0;
+.clear-button svg path{
+  fill: #FFFCDE;
 }
 .brush-cursor {
   position: fixed;
@@ -892,17 +952,83 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
   white-space: nowrap;
+  font-family: "montserrat", sans-serif;
 }
 .button {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background-color: #6AA24A;
+    color: #FFFCDE;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Berlin Sans FB', sans-serif;
+    height: 70px;
+    width: 30%;
+    border-radius: 100px;
+    position: absolute;
+    bottom: 20%;
+    right: 5%;
+}
+.color-input {
+  display: none;
+}
+.color-swatch {
+  width: 50px;
+  height: 50px;
+  margin: 30px 0;
+  display: block;
+  border-radius: 100%;;
+}
+.color-input:checked + .color-swatch {
+  outline: 2px solid black;
+}
+svg {
+  width: 30px;
+  height: 30px;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: 5px;  
+  background: #acc46b;
+  outline: none;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+input[type="range" i]::-webkit-slider-thumb  {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; 
+  background: #6AA24A;
   cursor: pointer;
+}
+
+input[type="range"] ::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6AA24A;
+  cursor: pointer;
+}
+.color-section{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 25%;
+  align-items: center;
+}
+.back{
+  position: absolute;
+  bottom: 15%;
+  left: 16%;
+  font-size: 1.5rem;
+  color: #6AA24A;
+  text-decoration: underline;
 }
 </style>

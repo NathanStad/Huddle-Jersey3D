@@ -32,6 +32,15 @@ onMounted(() => {
   }
 });
 
+const route = useRoute();
+const router = useRouter();
+
+onMounted(() => {
+  setTimeout(() => {
+    router.push("/");
+  }, 10000);
+});
+
 async function submitClientFromStorage() {
   const inscriptionForm = JSON.parse(
     localStorage.getItem("inscriptionForm") || "{}"

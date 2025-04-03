@@ -19,7 +19,7 @@
     >
       LET’S GO
     </button>
-    <a class="back" href="/">Retour</a>
+    <a class="back" href="/">Back</a>
   </div>
   <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
 </template>

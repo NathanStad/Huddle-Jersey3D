@@ -5,11 +5,11 @@
       <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
         <thead class="bg-gray-100 text-left">
           <tr>
-            <th class="p-3">Nom</th>
+            <th class="p-3">Name</th>
             <th class="p-3">Email</th>
-            <th class="p-3">Téléphone</th>
-            <th class="p-3">Adresse</th>
-            <th class="p-3">Couleur</th>
+            <th class="p-3">Phone</th>
+            <th class="p-3">Address</th>
+            <th class="p-3">Jersey Color</th>
             <th class="p-3">Image</th>
             <th class="p-3">Actions</th>
           </tr>
@@ -43,7 +43,7 @@
                 target="_blank"
                 class="text-blue-600 underline text-sm"
               >
-                Voir
+                See image
               </a>
               <span v-else class="text-gray-400 italic">—</span>
             </td>
@@ -52,7 +52,7 @@
                 @click="deleteClient(client.id)"
                 class="text-red-600 underline text-sm hover:text-red-800"
               >
-                Supprimer
+                Delete
               </button>
             </td>
           </tr>
@@ -60,7 +60,7 @@
       </table>
   
       <p v-if="clients.length === 0" class="mt-6 text-gray-500 text-sm">
-        Aucun client à afficher.
+        None
       </p>
     </div>
   </template>

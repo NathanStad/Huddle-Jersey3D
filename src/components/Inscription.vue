@@ -46,7 +46,7 @@
       >
         NEXT
       </button>
-      <div class="back-link" @click="back">Retour</div>
+      <div class="back-link" @click="back">Back</div>
     </div>
     <img src="/public/img/LogoHuddleVert.png" class="logo" alt="Logo Huddle" />
   </div>
