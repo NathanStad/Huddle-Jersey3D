@@ -1,4 +1,8 @@
 <template>
+    <VirtualKeyboard
+    :targetInput="focusedInput"
+    v-model:visible="keyboardVisible"
+  />
   <div class="form-page">
     <div class="form-container">
       <div class="text-form">
@@ -7,17 +11,17 @@
         <form @submit.prevent="handleSubmit">
           <div class="input-group">
             <label for="firstName">First name</label>
-            <input type="text" id="firstName" v-model="form.firstName" required />
+            <input type="text" id="firstName" v-model="form.firstName" required @focus="showKeyboard($event)" data-key="firstName" />
             <span v-if="errors.firstName">{{ errors.firstName }}</span>
           </div>
           <div class="input-group">
             <label for="lastName">Last name</label>
-            <input type="text" id="lastName" v-model="form.lastName" required />
+            <input type="text" id="lastName" v-model="form.lastName" required @focus="showKeyboard($event)" data-key="lastName" />
             <span v-if="errors.lastName">{{ errors.lastName }}</span>
           </div>
           <div class="input-group">
             <label for="email">Email address</label>
-            <input type="email" id="email" v-model="form.email" required />
+            <input type="email" id="email" v-model="form.email" required @focus="showKeyboard($event)" data-key="email" />
             <span v-if="errors.email">{{ errors.email }}</span>
           </div>
           <div class="input-group phone-input">
@@ -27,7 +31,7 @@
                 <option value="+41">+41</option>
                 <option value="+33">+33</option>
               </select>
-              <input type="tel" id="phoneNumber" v-model="form.phoneNumber" required />
+              <input type="tel" id="phoneNumber" v-model="form.phoneNumber" required @focus="showKeyboard($event)" data-key="phoneNumber" />
             </div>
             <span v-if="errors.phoneNumber">{{ errors.phoneNumber }}</span>
           </div>
@@ -53,8 +57,36 @@
 </template>
 
 <script setup>
-import { reactive, computed } from "vue";
+import { reactive, computed, onMounted, ref,  nextTick  } from "vue";
 import { useRouter } from 'vue-router';
+import VirtualKeyboard from './VirtualKeyboard.vue'
+
+const focusedInput = ref(null)
+const keyboardVisible = ref(false)
+
+function showKeyboard(event) {
+  const target = event.target
+
+  if (focusedInput.value !== target) {
+    focusedInput.value = target
+  } else {
+    focusedInput.value = null
+    nextTick(() => {
+      focusedInput.value = target
+    })
+  }
+
+  keyboardVisible.value = true
+}
+
+onMounted(() => {
+  window.addEventListener('update:model-value', (e) => {
+    if (e.detail?.key && e.detail?.value !== undefined) {
+      form[e.detail.key] = e.detail.value
+    }
+  })
+})
+
 const router = useRouter();
 
 
@@ -79,7 +111,7 @@ const errors = reactive({
 
 const isValidName = (value) => /^[A-Za-zÀ-ÖØ-öø-ÿ\-]{2,30}$/.test(value);
 const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
-const isValidPhone = (value) => /^[0-9]{7,15}$/.test(value);
+const isValidPhone = (value) => /^\d{7,15}$/.test(value);
 
 const validate = () => {
   let isValid = true;

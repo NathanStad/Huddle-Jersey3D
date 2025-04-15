@@ -1,28 +1,34 @@
 <template>
+    <VirtualKeyboard
+    :targetInput="focusedInput"
+    v-model:visible="keyboardVisible"
+  />
   <div class="shipping-container">
     <h1 class="title">How would you like to receive your jersey?</h1>
 
     <div class="content">
       <!-- Flyer -->
-      <div class="flyer"></div>
+      <div class="flyer">
+        <img :src="`../../backend/uploads/${img}`" alt="">
+      </div>
 
       <!-- Formulaire -->
       <form class="form" @submit.prevent="handleSubmit">
         <label>
           Street address
-          <input type="text" v-model="form.street" required />
+          <input type="text" v-model="form.street" required @focus="showKeyboard($event)" />
           <span v-if="errors.street">{{ errors.street }}</span>
         </label>
 
         <div class="row">
           <label>
             Postal code
-            <input type="text" v-model="form.postal" required />
+            <input type="text" v-model="form.postal" required @focus="showKeyboard($event)" />
             <span v-if="errors.postal">{{ errors.postal }}</span>
           </label>
           <label>
             City
-            <input type="text" v-model="form.city" required />
+            <input type="text" v-model="form.city" required @focus="showKeyboard($event)" />
             <span v-if="errors.city">{{ errors.city }}</span>
           </label>
         </div>
@@ -57,13 +63,40 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed, onMounted, ref,  nextTick } from 'vue';
 import { useRouter } from 'vue-router';
+import VirtualKeyboard from './VirtualKeyboard.vue'
 
+const focusedInput = ref(null)
+const keyboardVisible = ref(false)
+
+function showKeyboard(event) {
+  const target = event.target
+
+  if (focusedInput.value !== target) {
+    focusedInput.value = target
+  } else {
+    focusedInput.value = null
+    nextTick(() => {
+      focusedInput.value = target
+    })
+  }
+
+  keyboardVisible.value = true
+}
+
+onMounted(() => {
+  window.addEventListener('update:model-value', (e) => {
+    if (e.detail?.key && e.detail?.value !== undefined) {
+      form[e.detail.key] = e.detail.value
+    }
+  })
+})
 if (!localStorage.getItem('inscriptionForm')) {
   window.history.back();
 }
 
+const img = localStorage.getItem('lastExportedFile');
 const router = useRouter();
 const form = reactive({
   street: '',
@@ -150,7 +183,7 @@ function takeFlyer() {
     margin-bottom: 40px;
     flex-wrap: wrap;
     width: 80vw;
-    height: 50vh;
+    height: 60vh;
   }
   
   .flyer img {
@@ -181,7 +214,7 @@ function takeFlyer() {
     font-size: 14px;
     color: #6AA24A;
     background-color: transparent;
-    margin-top: 20px;
+    margin-top: 10px;
   }
   
   label {
@@ -204,9 +237,20 @@ function takeFlyer() {
 
   .flyer{
     width: 30%;
-    background-image: url('../assets/FondGazon.jpg');
+    background-image: url('/public/img/FlyerRecto1HCA.png');
     height: 100%;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & img {
+      margin-top: 25px ;
+      width: 140%;
+      box-shadow: none;
+    }
   }
+
   
   .btn {
     padding: 14px 28px;

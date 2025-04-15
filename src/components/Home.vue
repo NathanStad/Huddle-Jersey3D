@@ -58,8 +58,7 @@ function initThreeJS() {
             scene.add(jersey);
         },
         (xhr) => {
-            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-        },
+            },
         (error) => {
             console.error('Une erreur s\'est produite lors du chargement du modèle:', error);
         }

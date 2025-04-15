@@ -14,7 +14,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
-import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 const contenu = ref(
   "Thanks for joining! Your flyer with your jersey design is ready for pickup."
@@ -32,9 +32,7 @@ onMounted(() => {
   }
 });
 
-const route = useRoute();
 const router = useRouter();
-
 onMounted(() => {
   setTimeout(() => {
     router.push("/");

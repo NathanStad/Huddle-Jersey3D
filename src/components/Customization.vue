@@ -1,4 +1,8 @@
 <template>
+  <VirtualKeyboard
+    :targetInput="focusedInput"
+    v-model:visible="keyboardVisible"
+  />
   <span v-if="showPaintUI" id="zonedraw"></span>
   <div
     ref="viewer"
@@ -9,7 +13,6 @@
     <div class="tool-section">
       <h2>Select a tool</h2>
       <div>
-
         <button
           @click="setTool('brush')"
           :class="{ active: currentTool === 'brush' }"
@@ -46,14 +49,62 @@
           :class="{ active: currentTool === 'eraser' }"
           class="tool-button"
         >
-          <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M21.0302 22H13.9902C13.5702 22 13.2402 21.66 13.2402 21.25C13.2402 20.84 13.5802 20.5 13.9902 20.5H21.0302C21.4502 20.5 21.7802 20.84 21.7802 21.25C21.7802 21.66 21.4502 22 21.0302 22Z" fill="#292D32"></path> <path d="M13.64 16.6894C14.03 17.0794 14.03 17.7094 13.64 18.1094L10.66 21.0894C9.55 22.1994 7.77 22.2594 6.59 21.2694C6.52 21.2094 6.46 21.1494 6.4 21.0894L5.53 20.2194L3.74 18.4294L2.88 17.5694C2.81 17.4994 2.75 17.4294 2.69 17.3594C1.71 16.1794 1.78 14.4194 2.88 13.3194L5.86 10.3394C6.25 9.94938 6.88 9.94938 7.27 10.3394L13.64 16.6894Z" fill="#292D32"></path> <path d="M21.1194 10.6414L16.1194 15.6414C15.7294 16.0314 15.0994 16.0314 14.7094 15.6414L8.33937 9.29141C7.94938 8.90141 7.94938 8.27141 8.33937 7.87141L13.3394 2.88141C14.5094 1.71141 16.4294 1.71141 17.5994 2.88141L21.1194 6.39141C22.2894 7.56141 22.2894 9.47141 21.1194 10.6414Z" fill="#292D32"></path> </g></svg></span> Eraser
+          <span class="tool-icon"
+            ><svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M21.0302 22H13.9902C13.5702 22 13.2402 21.66 13.2402 21.25C13.2402 20.84 13.5802 20.5 13.9902 20.5H21.0302C21.4502 20.5 21.7802 20.84 21.7802 21.25C21.7802 21.66 21.4502 22 21.0302 22Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  d="M13.64 16.6894C14.03 17.0794 14.03 17.7094 13.64 18.1094L10.66 21.0894C9.55 22.1994 7.77 22.2594 6.59 21.2694C6.52 21.2094 6.46 21.1494 6.4 21.0894L5.53 20.2194L3.74 18.4294L2.88 17.5694C2.81 17.4994 2.75 17.4294 2.69 17.3594C1.71 16.1794 1.78 14.4194 2.88 13.3194L5.86 10.3394C6.25 9.94938 6.88 9.94938 7.27 10.3394L13.64 16.6894Z"
+                  fill="#292D32"
+                ></path>
+                <path
+                  d="M21.1194 10.6414L16.1194 15.6414C15.7294 16.0314 15.0994 16.0314 14.7094 15.6414L8.33937 9.29141C7.94938 8.90141 7.94938 8.27141 8.33937 7.87141L13.3394 2.88141C14.5094 1.71141 16.4294 1.71141 17.5994 2.88141L21.1194 6.39141C22.2894 7.56141 22.2894 9.47141 21.1194 10.6414Z"
+                  fill="#292D32"
+                ></path>
+              </g></svg
+          ></span>
+          Eraser
         </button>
         <button
           @click="setTool('text')"
           :class="{ active: currentTool === 'text' }"
           class="tool-button"
         >
-          <span class="tool-icon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M15 1H1V15H15V1ZM3 3V7H5V5H7V11H5V13H11V11H9V5H11V7H13V3H3Z" fill="#000000"></path> </g></svg></span> Text
+          <span class="tool-icon"
+            ><svg
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M15 1H1V15H15V1ZM3 3V7H5V5H7V11H5V13H11V11H9V5H11V7H13V3H3Z"
+                  fill="#000000"
+                ></path>
+              </g></svg
+          ></span>
+          Text
         </button>
       </div>
     </div>
@@ -71,38 +122,82 @@
         placeholder="Enter text"
         class="text-input"
         v-if="currentTool === 'text'"
+        @focus="showKeyboard($event)"
       />
     </div>
-    
-    <label v-if="currentTool === 'brush' || currentTool === 'text'" class="color-section">
+
+    <label
+      v-if="currentTool === 'brush' || currentTool === 'text'"
+      class="color-section"
+    >
       <h2>Select a color</h2>
       <div class="color-options">
         <label>
-          <input type="radio" v-model="brushColor" value="#6AA24A" class="color-input" checked />
-          <span style="background-color: #6AA24A;" class="color-swatch"></span>
+          <input
+            type="radio"
+            v-model="brushColor"
+            value="#6AA24A"
+            class="color-input"
+            checked
+          />
+          <span style="background-color: #6aa24a" class="color-swatch"></span>
         </label>
         <label>
-          <input type="radio" v-model="brushColor" value="#F6EE80" class="color-input" />
-          <span style="background-color: #F6EE80;" class="color-swatch"></span>
+          <input
+            type="radio"
+            v-model="brushColor"
+            value="#F6EE80"
+            class="color-input"
+          />
+          <span style="background-color: #f6ee80" class="color-swatch"></span>
         </label>
         <label>
-          <input type="radio" v-model="brushColor" value="#F9D5E7" class="color-input" />
-          <span style="background-color: #F9D5E7;" class="color-swatch"></span>
+          <input
+            type="radio"
+            v-model="brushColor"
+            value="#F9D5E7"
+            class="color-input"
+          />
+          <span style="background-color: #f9d5e7" class="color-swatch"></span>
         </label>
         <label>
-          <input type="radio" v-model="brushColor" value="#000000" class="color-input" />
-          <span style="background-color: #000000;" class="color-swatch"></span>
+          <input
+            type="radio"
+            v-model="brushColor"
+            value="#000000"
+            class="color-input"
+          />
+          <span style="background-color: #000000" class="color-swatch"></span>
         </label>
         <label>
-          <input type="radio" v-model="brushColor" value="#FFFFFF" class="color-input" />
-          <span style="background-color: #FFFFFF;" class="color-swatch"></span>
+          <input
+            type="radio"
+            v-model="brushColor"
+            value="#FFFFFF"
+            class="color-input"
+          />
+          <span style="background-color: #ffffff" class="color-swatch"></span>
         </label>
       </div>
     </label>
 
     <div class="action-buttons">
       <button @click="clearPaint" class="action-button clear-button">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 10L3.29289 10.7071L2.58579 10L3.29289 9.29289L4 10ZM21 18C21 18.5523 20.5523 19 20 19C19.4477 19 19 18.5523 19 18L21 18ZM8.29289 15.7071L3.29289 10.7071L4.70711 9.29289L9.70711 14.2929L8.29289 15.7071ZM3.29289 9.29289L8.29289 4.29289L9.70711 5.70711L4.70711 10.7071L3.29289 9.29289ZM4 9L14 9L14 11L4 11L4 9ZM21 16L21 18L19 18L19 16L21 16ZM14 9C17.866 9 21 12.134 21 16L19 16C19 13.2386 16.7614 11 14 11L14 9Z" fill="#33363F"></path> </g></svg> Clear All
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g
+            id="SVGRepo_tracerCarrier"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></g>
+          <g id="SVGRepo_iconCarrier">
+            <path
+              d="M4 10L3.29289 10.7071L2.58579 10L3.29289 9.29289L4 10ZM21 18C21 18.5523 20.5523 19 20 19C19.4477 19 19 18.5523 19 18L21 18ZM8.29289 15.7071L3.29289 10.7071L4.70711 9.29289L9.70711 14.2929L8.29289 15.7071ZM3.29289 9.29289L8.29289 4.29289L9.70711 5.70711L4.70711 10.7071L3.29289 9.29289ZM4 9L14 9L14 11L4 11L4 9ZM21 16L21 18L19 18L19 16L21 16ZM14 9C17.866 9 21 12.134 21 16L19 16C19 13.2386 16.7614 11 14 11L14 9Z"
+              fill="#33363F"
+            ></path>
+          </g>
+        </svg>
+        Clear All
       </button>
     </div>
   </div>
@@ -129,10 +224,37 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, onBeforeUnmount, watch } from "vue";
+import { onMounted, ref, computed, onBeforeUnmount, watch, nextTick  } from "vue";
 import * as THREE from "three";
 import { useRouter } from "vue-router";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import VirtualKeyboard from './VirtualKeyboard.vue'
+
+const focusedInput = ref(null)
+const keyboardVisible = ref(false)
+
+function showKeyboard(event) {
+  const target = event.target
+
+  if (focusedInput.value !== target) {
+    focusedInput.value = target
+  } else {
+    focusedInput.value = null
+    nextTick(() => {
+      focusedInput.value = target
+    })
+  }
+
+  keyboardVisible.value = true
+}
+
+onMounted(() => {
+  window.addEventListener('update:model-value', (e) => {
+    if (e.detail?.key && e.detail?.value !== undefined) {
+      form[e.detail.key] = e.detail.value
+    }
+  })
+})
 
 const router = useRouter();
 
@@ -840,11 +962,11 @@ onMounted(() => {
   z-index: 1;
 }
 
-h2{
-  color: #6AA24A;
+h2 {
+  color: #6aa24a;
   font-size: 4rem;
   margin: 2%;
-  font-family: 'Berlin Sans FB', sans-serif;
+  font-family: "Berlin Sans FB", sans-serif;
 }
 
 .tool-section {
@@ -857,7 +979,7 @@ h2{
   right: 5%;
   width: 25%;
 }
-.tool-section div{
+.tool-section div {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -872,19 +994,19 @@ h2{
   display: flex;
   align-items: center;
   gap: 5px;
-  width: 25% ;
+  width: 25%;
   font-size: 1.5rem;
 }
 .tool-button.active svg path {
-  fill: #6AA24A;
+  fill: #6aa24a;
 }
-.tool-button.active  {
-  color: #6AA24A;
+.tool-button.active {
+  color: #6aa24a;
 }
 .tool-icon {
   font-size: 16px;
 }
-.brush-controls{
+.brush-controls {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -895,8 +1017,8 @@ h2{
   font-family: "montserrat", sans-serif;
 }
 .text-input {
-  padding: 10px 15px ;
-  border: 2px solid #6AA24A;
+  padding: 10px 15px;
+  border: 2px solid #6aa24a;
   background: transparent;
   border-radius: 30px;
   width: 100%;
@@ -918,12 +1040,12 @@ h2{
   cursor: pointer;
 }
 .clear-button {
-  background: #6AA24A;
+  background: #6aa24a;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  color: #FFFCDE;
-  fill: #FFFCDE;
+  color: #fffcde;
+  fill: #fffcde;
   font-size: 1.5rem;
   gap: 10px;
   border-radius: 100px;
@@ -931,8 +1053,8 @@ h2{
   top: 70%;
   left: 12.5%;
 }
-.clear-button svg path{
-  fill: #FFFCDE;
+.clear-button svg path {
+  fill: #fffcde;
 }
 .brush-cursor {
   position: fixed;
@@ -955,19 +1077,19 @@ h2{
   font-family: "montserrat", sans-serif;
 }
 .button {
-  background-color: #6AA24A;
-    color: #FFFCDE;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    border-radius: 5px;
-    font-family: 'Berlin Sans FB', sans-serif;
-    height: 70px;
-    width: 30%;
-    border-radius: 100px;
-    position: absolute;
-    bottom: 20%;
-    right: 5%;
+  background-color: #6aa24a;
+  color: #fffcde;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: "Berlin Sans FB", sans-serif;
+  height: 70px;
+  width: 30%;
+  border-radius: 100px;
+  position: absolute;
+  bottom: 20%;
+  right: 5%;
 }
 .color-input {
   display: none;
@@ -977,7 +1099,7 @@ h2{
   height: 50px;
   margin: 30px 0;
   display: block;
-  border-radius: 100%;;
+  border-radius: 100%;
 }
 .color-input:checked + .color-swatch {
   outline: 2px solid black;
@@ -990,20 +1112,20 @@ input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
   height: 5px;
-  border-radius: 5px;  
+  border-radius: 5px;
   background: #acc46b;
   outline: none;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 }
 
-input[type="range" i]::-webkit-slider-thumb  {
+input[type="range" i]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 20px;
   height: 20px;
-  border-radius: 50%; 
-  background: #6AA24A;
+  border-radius: 50%;
+  background: #6aa24a;
   cursor: pointer;
 }
 
@@ -1011,10 +1133,10 @@ input[type="range"] ::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #6AA24A;
+  background: #6aa24a;
   cursor: pointer;
 }
-.color-section{
+.color-section {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -1023,12 +1145,12 @@ input[type="range"] ::-moz-range-thumb {
   width: 25%;
   align-items: center;
 }
-.back{
+.back {
   position: absolute;
   bottom: 15%;
   left: 16%;
   font-size: 1.5rem;
-  color: #6AA24A;
+  color: #6aa24a;
   text-decoration: underline;
 }
 </style>
