@@ -343,7 +343,7 @@ async function saveDrawing() {
       }
 
       try {
-        const response = await fetch("https://huddle-jersey3d.onrender.com//jerseys", {
+        const response = await fetch("https://huddle-jersey3d.onrender.com/jerseys", {
           method: "POST",
           body: formData,
         });

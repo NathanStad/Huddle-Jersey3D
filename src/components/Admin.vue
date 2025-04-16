@@ -71,7 +71,7 @@
   const clients = ref([])
   
   const getImageUrl = (filename) => {
-    return `https://huddle-jersey3d.onrender.com//uploads/${filename}`
+    return `https://res.cloudinary.com/dkvgxfonk/image/upload/v1744806097/jerseys/${filename}`
   }
   
   const fetchClients = async () => {
