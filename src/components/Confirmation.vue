@@ -60,7 +60,7 @@ async function submitClientFromStorage() {
   let jerseyId = null;
 
   try {
-    const response = await fetch("http://localhost:3001/jerseys");
+    const response = await fetch("https://huddle-jersey3d.onrender.com/jerseys");
     const jerseys = await response.json();
 
     const found = jerseys.find((j) => j.drawingFile === lastExportedFile);
@@ -94,7 +94,7 @@ async function submitClientFromStorage() {
   }
 
   try {
-    const res = await fetch("http://localhost:3001/clients", {
+    const res = await fetch("https://huddle-jersey3d.onrender.com/clients", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(clientData),

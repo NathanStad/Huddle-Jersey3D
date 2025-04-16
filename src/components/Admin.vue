@@ -71,12 +71,12 @@
   const clients = ref([])
   
   const getImageUrl = (filename) => {
-    return `http://localhost:3001/uploads/${filename}`
+    return `https://huddle-jersey3d.onrender.com//uploads/${filename}`
   }
   
   const fetchClients = async () => {
     try {
-      const res = await fetch('http://localhost:3001/clients')
+      const res = await fetch('https://huddle-jersey3d.onrender.com//clients')
       const data = await res.json()
   
       // Ne garder que les clients avec adresse complète
@@ -92,7 +92,7 @@
     if (!confirm("Supprimer ce client ?")) return;
   
     try {
-      const res = await fetch(`http://localhost:3001/clients/${id}`, {
+      const res = await fetch(`https://huddle-jersey3d.onrender.com//clients/${id}`, {
         method: "DELETE",
       });
   
