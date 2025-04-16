@@ -9,7 +9,7 @@
     <div class="content">
       <!-- Flyer -->
       <div class="flyer">
-        <img :src="`https://res.cloudinary.com/dkvgxfonk/image/upload/v1744806097/jerseys/${img}`" alt="">
+        <img :src="`https://res.cloudinary.com/dkvgxfonk/image/upload/jerseys/${img}`" alt="">
       </div>
 
       <!-- Formulaire -->

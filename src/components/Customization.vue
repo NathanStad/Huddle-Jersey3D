@@ -224,37 +224,44 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed, onBeforeUnmount, watch, nextTick  } from "vue";
+import {
+  onMounted,
+  ref,
+  computed,
+  onBeforeUnmount,
+  watch,
+  nextTick,
+} from "vue";
 import * as THREE from "three";
 import { useRouter } from "vue-router";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import VirtualKeyboard from './VirtualKeyboard.vue'
+import VirtualKeyboard from "./VirtualKeyboard.vue";
 
-const focusedInput = ref(null)
-const keyboardVisible = ref(false)
+const focusedInput = ref(null);
+const keyboardVisible = ref(false);
 
 function showKeyboard(event) {
-  const target = event.target
+  const target = event.target;
 
   if (focusedInput.value !== target) {
-    focusedInput.value = target
+    focusedInput.value = target;
   } else {
-    focusedInput.value = null
+    focusedInput.value = null;
     nextTick(() => {
-      focusedInput.value = target
-    })
+      focusedInput.value = target;
+    });
   }
 
-  keyboardVisible.value = true
+  keyboardVisible.value = true;
 }
 
 onMounted(() => {
-  window.addEventListener('update:model-value', (e) => {
+  window.addEventListener("update:model-value", (e) => {
     if (e.detail?.key && e.detail?.value !== undefined) {
-      form[e.detail.key] = e.detail.value
+      form[e.detail.key] = e.detail.value;
     }
-  })
-})
+  });
+});
 
 const router = useRouter();
 
@@ -343,10 +350,13 @@ async function saveDrawing() {
       }
 
       try {
-        const response = await fetch("https://huddle-jersey3d.onrender.com/jerseys", {
-          method: "POST",
-          body: formData,
-        });
+        const response = await fetch(
+          "https://huddle-jersey3d.onrender.com/jerseys",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         const data = await response.json();
 

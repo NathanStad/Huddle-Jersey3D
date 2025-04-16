@@ -71,7 +71,7 @@
   const clients = ref([])
   
   const getImageUrl = (filename) => {
-    return `https://res.cloudinary.com/dkvgxfonk/image/upload/v1744806097/jerseys/${filename}`
+    return `https://res.cloudinary.com/dkvgxfonk/image/upload/jerseys/${filename}`
   }
   
   const fetchClients = async () => {
